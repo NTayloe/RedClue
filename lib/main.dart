@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:red_clue/pages/maps_page.dart';
+import 'package:red_clue/pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,30 +17,36 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'RedClue'),
+      home: const MainPage(title: 'RedClue'),
+      routes: {
+        '/mainpage': (context) => const MainPage(title: 'RedClue'),
+        '/maps': (context) => const MapsPage(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
+  int _selectedIndex = 2;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final screens = [
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +68,72 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: GridView.count(
-        shrinkWrap: true,
         padding: EdgeInsets.all(12),
         crossAxisCount: 2,
-        children: List.generate(
-          4, 
-          (index){
-            return Card(
-              
-              color: Theme.of(context).colorScheme.inversePrimary,
+        children: const <NavigationCard>[
+          NavigationCard(
+            icon: Icon(Icons.info),
+            label: 'About',
+          ),
+          NavigationCard(
+            icon: Icon(Icons.info),
+            label: 'About',
+          ),
+          NavigationCard(
+            icon: Icon(Icons.info),
+            label: 'About',
+          ),
+          NavigationCard(
+            icon: Icon(Icons.paid),
+            label: 'Donate',
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.onSurface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Maps',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.view_list),
+            label: 'Arsenal'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'More'
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-            );
-          },
+class NavigationCard extends StatelessWidget {
+  const NavigationCard({super.key, required this.label, required this.icon});
+
+  final Icon icon;
+  final String label;
+  // add navigation variable
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Card(
+        color: Theme.of(context).colorScheme.inversePrimary,
+        child: Column(
+          children: [
+            Icon(this.icon.icon),
+            Text(this.label),
+          ],
         ),
       ),
+      // onTap: 
     );
   }
 }
